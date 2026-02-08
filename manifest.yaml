@@ -1,0 +1,82 @@
+---
+schema: 1
+name: rifs
+description: Python submission render interlaced framework.
+version: 0.1.3
+loadRequires:
+  python: 3.7+<4
+  dd: 6+<7
+requires:
+  submission: 4+<5
+recipes:
+  build:
+    requires:
+      bs: 1+<3
+    steps:
+      - buildup -v --output-dir=$distDir $packageDir
+  check:
+    requires:
+      pkg_check: 1+
+    steps:
+      - pkg-check package --package-dir=$distDir
+  docs:
+    requires:
+      sphinx: 5.3+<6
+      sphinx_rtd_dark_mode: 1.2+<2
+      sphinx_rtd_theme: 1.2+<2
+    steps:
+      - PACKAGE_NAME=$package PACKAGE_VERSION=$version PACKAGE_ROOT=$packageDir BUILD_ROOT=$distDir
+        PYTHONPATH=$distDir/python:$PYTHONPATH sphinx-build -qN $packageDir/docs $distDir/docs/html
+      - |-
+        INDEX_HTML="$distDir/docs/html/index.html"
+        if [ -r "$INDEX_HTML" ]
+        then echo "Preview docs: file://$INDEX_HTML"
+        fi
+  format:
+    requires:
+      python_black: 20+<23
+    steps:
+      - black . -l 120
+    type: package
+  format_check:
+    requires:
+      python_black: 20+<23
+    steps:
+      - black -l 120 --check $packageDir/src
+    type: package
+  lint:
+    requires:
+      pylint: 1.9+<3
+      python_yamllint: 1+<2
+    steps:
+      - pylint --max-line-length 120 --disable=consider-using-f-string,import-error  $packageDir/src
+      - 'yamllint -d "{extends: relaxed, rules: {line-length: {max: 120}}}" $packageDir/manifest.yaml'
+  shell:
+    requires:
+      ipython: 5+
+      python: 3.9.0~
+    steps:
+      - ipython
+  test:
+    includes:
+      - test_py39
+  test_py37:
+    requires:
+      pytest: 5+
+      pytest_cov: 2+<3
+      pytest_mock: 3.6+<4
+      pytest_sugar: 0.9+<1
+      python: 3.7.0~
+    steps:
+      - pytest $packageDir/tests
+    type: distribution
+  test_py39:
+    requires:
+      pytest: 5+
+      pytest_cov: 2+<3
+      pytest_mock: 3.6+<4
+      pytest_sugar: 0.9+<1
+      python: 3.9.0~
+    steps:
+      - pytest $packageDir/tests
+    type: distribution
