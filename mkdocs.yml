@@ -3,7 +3,7 @@ site_description: Personal development documentation and cheat sheets
 site_author: Your Name
 
 theme:
-  name: material
+  name: mkdocs
   palette:
     # Light mode
     - scheme: default
@@ -27,17 +27,17 @@ theme:
     - search.highlight
     - content.code.copy
 
-markdown_extensions:
-  - pymdownx.highlight:
-      anchor_linenums: true
-  - pymdownx.superfences
-  - pymdownx.tabbed:
-      alternate_style: true
-  - admonition
-  - pymdownx.details
-  - tables
-  - toc:
-      permalink: true
+# markdown_extensions:
+#   - pymdownx.highlight:
+#       anchor_linenums: true
+#   - pymdownx.superfences
+#   - pymdownx.tabbed:
+#       alternate_style: true
+#   - admonition
+#   - pymdownx.details
+#   - tables
+#   - toc:
+#       permalink: true
 
 nav:
   - Home: index.md
